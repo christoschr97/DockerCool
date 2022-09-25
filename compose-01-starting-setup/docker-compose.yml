@@ -1,0 +1,44 @@
+version: "3.8"
+
+services:
+  mongodb:
+    image: 'mongo'
+    volumes:
+      - data:/data/db
+    # environment:
+    #   MONGO_INITDB_ROOT_USERNAME: chr97
+    #   MONGO_INITDB_ROOT_PASSWORD: password
+    env_file:
+      - ./env/mongo.env
+  backend:
+    build: ./backend
+    # build:
+    #   context: ./backend
+    #   dockerfile: Dockerfile #if the name is Dockerfile you dont need to specify it
+    #   args:
+    #     -somearg: somevalue
+    ports: 
+      - '80:80'
+    volumes:
+      - logs:/app/logs
+      - ./backend:/app
+      - /app/node_modules
+    env_file:
+      - ./env/backend.env
+    depends_on:
+      - mongodb
+
+  frontend:
+    build: ./frontend
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./frontend/src:/app/src
+    stdin_open: true #this service needs an IO open connection 
+    # tty: true #the same as the above
+    depends_on: 
+      - backend
+
+volumes:
+  data:
+  logs:
