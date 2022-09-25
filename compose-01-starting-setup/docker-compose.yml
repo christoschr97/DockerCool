@@ -8,6 +8,7 @@ services:
     # environment:
     #   MONGO_INITDB_ROOT_USERNAME: chr97
     #   MONGO_INITDB_ROOT_PASSWORD: password
+    # container_name: mongodb # if i want to specify the name exactly and not use also the folder name
     env_file:
       - ./env/mongo.env
   backend:
